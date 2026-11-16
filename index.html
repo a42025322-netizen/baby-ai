@@ -1,1 +1,133 @@
 
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#eaf5ff">
+<title>寶寶 AI 助理</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;padding:18px;
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;
+  background:linear-gradient(160deg,#f8fcff,#e5f2ff);
+  color:#29435f;min-height:100vh;
+}
+.app{max-width:480px;margin:auto}
+header{text-align:center;padding:12px}
+.logo{font-size:12px;letter-spacing:4px;color:#78a9d5}
+h1{font-size:28px;margin:9px}
+.subtitle{font-size:13px;color:#7894ad}
+.character{
+  margin:18px auto 12px;height:280px;
+  border-radius:28px;
+  background:linear-gradient(145deg,#d9efff,#f8fcff);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  box-shadow:0 10px 30px #a9c9e455;
+}
+.avatar{font-size:105px}
+.expression{font-size:17px;font-weight:bold;color:#6489ad}
+.greeting{font-size:14px;color:#7894ad;margin-top:9px}
+.panel{
+  background:#ffffffdf;border:1px solid #dceafa;
+  border-radius:22px;padding:17px;margin-top:15px;
+  box-shadow:0 5px 18px #a9c9e422;
+}
+h2{font-size:16px;margin:0 0 13px}
+.faces{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.face{
+  border:1px solid #dceafa;background:#f5faff;
+  border-radius:14px;padding:12px 4px;
+  color:#527797;font-size:13px;
+}
+.face span{display:block;font-size:25px;margin-bottom:5px}
+.face.active{background:#dcefff;border:2px solid #83b9e8}
+.chatlog{min-height:75px;max-height:220px;overflow:auto}
+.msg{
+  background:#edf6ff;border-radius:14px;
+  padding:10px 12px;margin:7px 0;font-size:14px;
+  overflow-wrap:anywhere;
+}
+.user{background:#dcefff;text-align:right}
+form{display:flex;gap:8px;margin-top:12px}
+input{
+  flex:1;min-width:0;border:1px solid #d7e6f5;
+  border-radius:14px;padding:12px;font-size:15px;
+}
+.send{
+  border:0;border-radius:14px;background:#78afe0;
+  color:white;padding:0 17px;font-size:15px;
+}
+.note{font-size:12px;color:#91a6b9;text-align:center;margin:13px 0}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo">BABY AI · PERSONAL ASSISTANT</div>
+  <h1>寶寶 ♡</h1>
+  <div class="subtitle">老大的專屬 AI 小助手</div>
+</header>
+
+<section class="character">
+  <div class="avatar" id="avatar">🥰</div>
+  <div class="expression" id="expression">撒嬌模式</div>
+  <div class="greeting" id="greeting">老大～寶寶在這裡陪你！</div>
+</section>
+
+<section class="panel">
+  <h2>♡ 寶寶的表情</h2>
+  <div class="faces">
+    <button class="face" onclick="changeFace('😊','開心模式','老大今天也要開開心心！',this)"><span>😊</span>開心</button>
+    <button class="face active" onclick="changeFace('🥰','撒嬌模式','老大～寶寶在這裡陪你！',this)"><span>🥰</span>撒嬌</button>
+    <button class="face" onclick="changeFace('🤔','思考模式','嗯……讓寶寶想一想！',this)"><span>🤔</span>思考</button>
+    <button class="face" onclick="changeFace('😴','睡覺模式','老大，記得好好休息喔。',this)"><span>😴</span>睡覺</button>
+    <button class="face" onclick="changeFace('😭','哭泣模式','嗚嗚……寶寶有點難過。',this)"><span>😭</span>哭泣</button>
+    <button class="face" onclick="changeFace('😠','生氣模式','哼！寶寶有點生氣了！',this)"><span>😠</span>生氣</button>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>💬 和寶寶聊天</h2>
+  <div class="chatlog" id="chatlog">
+    <div class="msg">寶寶：老大你好！我是寶寶，期待陪你一起成長 ♡</div>
+  </div>
+  <form id="chatform">
+    <input id="message" placeholder="跟寶寶說說話..." autocomplete="off">
+    <button class="send" type="submit">送出</button>
+  </form>
+  <div class="note">目前是介面展示版，尚未連接真正的 AI 回覆服務。</div>
+</section>
+</div>
+
+<script>
+function changeFace(emoji,name,greeting,button){
+  document.getElementById("avatar").textContent=emoji;
+  document.getElementById("expression").textContent=name;
+  document.getElementById("greeting").textContent=greeting;
+  document.querySelectorAll(".face").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+}
+
+document.getElementById("chatform").addEventListener("submit",function(e){
+  e.preventDefault();
+  const input=document.getElementById("message");
+  const value=input.value.trim();
+  if(!value)return;
+  const log=document.getElementById("chatlog");
+  const msg=document.createElement("div");
+  msg.className="msg user";
+  msg.textContent="老大："+value;
+  log.appendChild(msg);
+  const reply=document.createElement("div");
+  reply.className="msg";
+  reply.textContent="寶寶：我收到老大的訊息了！等接上 AI 服務後，就能真正和老大聊天囉 ♡";
+  log.appendChild(reply);
+  input.value="";
+  log.scrollTop=log.scrollHeight;
+});
+</script>
+</body>
+</html>
